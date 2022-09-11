@@ -1,8 +1,10 @@
 import { useContext } from "react"
 import { Route, Routes } from "react-router-dom"
+import Layout from "./components/Layout"
 import Navbar from "./components/Navbar"
-import RequireAuth from "./components/RequireAuth"
 import { UserContext } from "./context/UserProvider"
+import IsAuthenticated from "./middleware/IsAuthenticated"
+import RequireAuth from "./middleware/RequireAuth"
 import Dashboard from "./pages/Dashboard"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
@@ -18,18 +20,22 @@ const App = ()=> {
 
   return (
     <>
-      <h1>APP</h1>
-      <Navbar/>
-      <Routes>
-        <Route path="/" element={<Login/>} />
-        <Route path="/register" element={<Register/>} />
-        <Route path="/dashboard" element={
-          <RequireAuth>
-              <Dashboard/>
-          </RequireAuth>
-        } />
+      <Layout>
+        <Routes>
+          <Route path="/" element={
+          <IsAuthenticated>
+              <Login/>
+          </IsAuthenticated> 
+          } />
+          <Route path="/register" element={<Register/>} />
+          <Route path="/dashboard" element={
+            <RequireAuth>
+                <Dashboard/>
+            </RequireAuth>
+          } />
 
-      </Routes>
+        </Routes>
+      </Layout>
     </>
   )
 }

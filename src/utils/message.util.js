@@ -1,5 +1,6 @@
 const mensajesError = [
-   
+    {code:'auth/wrong-password',description:'Contraseña incorrecta'},
+    {code:'auth/email-already-in-use',description:'Correo electrónico ya registrado'},
     {code:'auth/claims-too-large',description:'La carga útil de la reclamación que se entregó a setCustomUserClaims() supera el tamaño máximo de 1,000 bytes.'},
     {code:'auth/email-already-exists',description:'Otro usuario ya está utilizando el correo electrónico proporcionado. Cada usuario debe tener un correo electrónico único.'},
     {code:'auth/id-token-expired',description:'El token de ID de Firebase que se proporcionó está vencido.'},
@@ -64,7 +65,7 @@ const messageForCode = ({code})=>{
     if(objMessage){
         return objMessage.description
     }
-    return `Error no controlado : "${code}", por favor tome captura del navegador y notifquelo al administrador`;
+    return `Error no controlado : "${code}", por favor tome captura del navegador y notifíquelo al administrador`;
 }
 
 export {

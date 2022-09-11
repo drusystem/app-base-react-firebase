@@ -1,31 +1,59 @@
-import { useContext ,useState} from "react"
+import { useContext} from "react"
 import { UserContext } from "../context/UserProvider"
 import { useNavigate } from "react-router-dom"
+import { useForm } from "react-hook-form";
+import { messageForCode } from "../utils/message.util";
+import FormError from "../components/FormError";
+import FormInput from "../components/FormInput";
+import { formValidate } from "../utils/formValidate";
 
 const Login = () => {
 
-    const [email,setEmail] = useState('');
-    const [password,setPassword] = useState('');
     const {loginUser}  = useContext(UserContext);
     const navegate = useNavigate();
+    const {register,handleSubmit, formState:{errors}, setError} = useForm();
+    const {required, patternEmail,minLength,validateTrim} = formValidate()
 
-    const handleSubmit= async(e) =>{
-        e.preventDefault()
-
+    const onSubmit = async({email,password}) => {
         try {
-            const responseLogin = await loginUser(email,password);
+            await loginUser(email,password);
             navegate("/dashboard");
         } catch (error) {
             console.log(error.code);
+            const errorUtil = messageForCode(error)
+            setError("firebase",{
+                message:errorUtil
+            })
+            // errors.email.message = errorUtil;
         }
     }
 
     return (
         <>
             <h1>INICIAR SESIÓN</h1>
-            <form onSubmit={handleSubmit}>
-                <input type="email" placeholder="Ingrese email" value={email} onChange={e=>setEmail(e.target.value)} />
-                <input type="password" placeholder="Ingrese contraseña" value={password} onChange={e=>setPassword(e.target.value)}  />
+            <FormError error={errors.firebase}/>
+            <form onSubmit={handleSubmit(onSubmit)}>
+            <FormInput
+                type="email" 
+                placeholder="Ingrese email" 
+                {...register("email",{
+                    required,
+                    pattern: patternEmail
+                })}
+            >
+            </FormInput>
+            <FormError error={errors.email}/>
+
+            <FormInput  
+                type="password" 
+                placeholder="Ingrese contraseña"
+                {...register("password",{
+                    minLength:minLength(6),
+                    validate:validateTrim
+                })}
+            ></FormInput>
+            <FormError error={errors.password}/>
+
                 <input type="submit" value="Ingresar" />
             </form>
         </>
