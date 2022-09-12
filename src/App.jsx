@@ -1,12 +1,16 @@
 import { useContext } from "react"
 import { Route, Routes } from "react-router-dom"
-import Layout from "./components/Layout"
-import Navbar from "./components/Navbar"
+import LayoutRequireAuth from "./components/layouts/LayoutRequireAuth"
+import Loading from "./components/layouts/Loading"
+
 import { UserContext } from "./context/UserProvider"
 import IsAuthenticated from "./middleware/IsAuthenticated"
-import RequireAuth from "./middleware/RequireAuth"
-import Dashboard from "./pages/Dashboard"
+import CostoDetalles from "./pages/Dashboard/Costos/CostoDetalles"
+import Costos from "./pages/Dashboard/Costos/Costos"
+import Home from "./pages/Dashboard/Home"
+
 import Login from "./pages/Login"
+import NotFound from "./pages/NotFound"
 import Register from "./pages/Register"
 
 
@@ -15,27 +19,38 @@ const App = ()=> {
   const {user} = useContext(UserContext)
 
   if(user === false){
-    return <p>Loading...</p>
+    return <Loading/>
   }
 
   return (
     <>
-      <Layout>
         <Routes>
           <Route path="/" element={
-          <IsAuthenticated>
-              <Login/>
-          </IsAuthenticated> 
-          } />
+              <IsAuthenticated>
+                  <Login/>
+              </IsAuthenticated> 
+              } 
+            />
           <Route path="/register" element={<Register/>} />
-          <Route path="/dashboard" element={
-            <RequireAuth>
-                <Dashboard/>
-            </RequireAuth>
-          } />
+
+          <Route path="/" element={<LayoutRequireAuth/>}>
+              <Route path="dashboard" element={<Home/>}/>
+              <Route path="dashboard/costos" element={<Costos/>}/>
+              <Route path="dashboard/costos/:costoId" element={<CostoDetalles/>}/>
+          </Route>
+
+          <Route path="*" element={<NotFound/>}/>
+          
+          {/* <Route path="/" element={<Layout/>}>
+            <Route path="/dashboard" element={
+                <RequireAuth>
+                    <Dashboard/>
+                </RequireAuth>
+              } 
+            />
+          </Route> */}
 
         </Routes>
-      </Layout>
     </>
   )
 }

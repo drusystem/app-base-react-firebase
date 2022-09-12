@@ -2,10 +2,10 @@ import { useContext, useState } from "react";
 import { UserContext } from "../context/UserProvider";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { messageForCode } from "../utils/message.util";
 import FormError from "../components/FormError";
 import { formValidate } from "../utils/formValidate";
 import FormInput from "../components/FormInput";
+import GeneralError from "../components/GeneralError";
 
 const Register = () => {
 
@@ -13,17 +13,16 @@ const Register = () => {
     const navegate = useNavigate();
     const {register,handleSubmit, formState:{errors},getValues, setError} = useForm();
     const {required, patternEmail,minLength,validateTrim,validateEquals} = formValidate()
-
+    const [errorSystem,setErrorSystem] = useState('');
     const onSubmit = async({email,password}) => {
         try {
             await registerUser(email,password);
             navegate("/dashboard");
         } catch (error) {
-            console.log(error.code);
-            const errorUtil = messageForCode(error)
-            setError("firebase",{
-                message:errorUtil
-            })
+            setErrorSystem(error.code);
+            // setError("firebase",{
+            //     message:errorUtil
+            // })
             // errors.email.message = errorUtil;
         }
     }
@@ -31,7 +30,7 @@ const Register = () => {
   return (
     <>
         <h1>Registro</h1>
-        <FormError error={errors.firebase}/>
+        <GeneralError code={errorSystem}/>
         <form onSubmit={handleSubmit(onSubmit)}>
             <FormInput
                 type="email" 
@@ -58,7 +57,7 @@ const Register = () => {
                 type="password" 
                 placeholder="Repita contraseña" 
                 {...register("repassword",{
-                    validate:validateEquals(getValues)
+                    validate:validateEquals(getValues("password"))
                 })}
             >
             </FormInput>

@@ -59,7 +59,7 @@ const mensajesError = [
 
 ]
 
-const messageForCode = ({code})=>{
+const messageForCode = (code)=>{
 
     let objMessage = mensajesError.find(msj => msj.code === code);
     if(objMessage){

@@ -28,11 +28,10 @@ export const formValidate = () =>{
                 return true;
             }
         },
-        validateEquals: (getValues)=>{
+        validateEquals: (value)=>{
             return {
                 equals: (valInput) => 
-                        valInput === getValues("password") ||
-                        "No coinciden las contraseñas"   
+                        valInput === value || "No coinciden las contraseñas"   
             }
         }
     }
