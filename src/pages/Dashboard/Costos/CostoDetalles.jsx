@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Breadcrumb from "../../../components/Breadcrumb";
+import GeneralError from "../../../components/GeneralError";
 import Loading from "../../../components/layouts/Loading";
 import { useFirestore } from "../../../hooks/useFirestore";
 import CostoCard from "./CostoCard";
@@ -21,8 +22,9 @@ const CostoDetalles = () => {
   return (
     <>
         <Breadcrumb migajas={migajas}/>
+        <GeneralError code={dataError}/>
           {
-            loading ?
+            loading.getItemById ?
             <Loading/>
             :
             (
@@ -31,7 +33,7 @@ const CostoDetalles = () => {
                     <CostoCard item={item}/>
                 </div>
                 <div className="col-span-2">
-                      <CostoRubro item={item}/>
+                      <CostoRubro costoId={costoId}/>
                 </div>
               </div>
             )

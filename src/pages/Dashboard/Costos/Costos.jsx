@@ -3,10 +3,11 @@ import Breadcrumb from "../../../components/Breadcrumb";
 import Table from "../../../components/Table"
 import { useFirestore } from "../../../hooks/useFirestore"
 import { useNavigate } from "react-router-dom"
+import GeneralError from "../../../components/GeneralError";
 
 const Costos = () => {
 
-  const {data,error:dataError,loading,getData} = useFirestore('costos')
+  const {data,error,loading,getData} = useFirestore('costos')
   const navegate = useNavigate();
   useEffect(()=>{
     getData()
@@ -23,8 +24,8 @@ const Costos = () => {
     <>
 
       <Breadcrumb migajas={migajas}/>
-      
-      <Table  loading={loading} columnas={columnasTabla}>
+      <GeneralError code={error}/>
+      <Table  loading={loading.getData} columnas={columnasTabla}>
           {
             data.map(registro=>(
                 <tr key={`tr_register_${registro.id}`} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
