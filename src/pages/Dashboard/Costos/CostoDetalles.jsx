@@ -11,8 +11,19 @@ import CostoRubro from "./CostoRubro";
 
 const CostoDetalles = () => {
 
-  const migajas = ['Costos','Detalles'];
   const {costoId} = useParams();
+
+  const migajas = [
+    {
+      name:'Costos',
+      href:'/dashboard/costos'
+    },
+    {
+      name:'Detalles',
+      href: `/dashboard/costos/${costoId}`
+    }
+  ];
+  
   const {item,error:dataError,loading,getItemById} = useFirestore('costos')
   useEffect(()=>{
     getItemById(costoId)

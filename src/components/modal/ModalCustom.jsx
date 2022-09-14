@@ -1,6 +1,6 @@
 import { Button, Modal } from "flowbite-react"
 import BotonLoading from "../layouts/BotonLoading"
-const ModalCustom = ({title,verModal,onClose,onClick = (()=>{}),children,textConfirm,textCancel,loading,anchoModal="sm",typeButtonConfirm='button'}) => {
+const ModalCustom = ({title,verModal,onClose,onClick = (()=>{}),children,textConfirm,textCancel,loading,anchoModal="sm"}) => {
 
   return (
     <Modal
@@ -18,7 +18,7 @@ const ModalCustom = ({title,verModal,onClose,onClick = (()=>{}),children,textCon
         {
             loading ? <BotonLoading proceso="Guardando"/> :(
                 <>
-                    <Button type={typeButtonConfirm} onClick={onClick}>
+                    <Button onClick={onClick}>
                         {textConfirm}
                     </Button>
                     <Button

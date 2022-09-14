@@ -3,7 +3,7 @@ import { Button } from "flowbite-react"
 const CardHeaderTools = ({title,children}) => {
   return (
     <>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-2">
             <div className="col-span-2 grid content-center">
                 <h5 className="text-base font-semibold text-gray-900 md:text-xl dark:text-white">
                     {title}

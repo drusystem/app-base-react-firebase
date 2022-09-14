@@ -100,6 +100,7 @@ export const useFirestore = (coleccion) => {
         item,
         getItemById,
         addData,
-        getDataByColumn
+        getDataByColumn,
+        setData
   }
 }

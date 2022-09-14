@@ -1,8 +1,7 @@
-const LiCustom = ({children}) => {
+const LiCustom = ({llave,children}) => {
     
   return (
-    <li class="py-2 px-4 w-full border-b border-gray-200 dark:border-gray-600">{children}</li>
-    
+    <li key={llave} className="py-2 px-4 w-full border-b border-gray-200 dark:border-gray-600">{children}</li>
   )
 }
 

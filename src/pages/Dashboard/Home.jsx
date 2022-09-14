@@ -1,13 +1,14 @@
 import Breadcrumb from "../../components/Breadcrumb"
+import Saludo from "../../components/Saludo"
+import MenuModular from "./MenuModular"
 
 
 const Home = () => {
   return (
     <>
-    <Breadcrumb migajas={[]}/>
-    <div className="p-3">
-        <h1>Bienvenido al sistema de costos</h1>
-    </div>
+      <Breadcrumb/>
+      <Saludo title="BIENVENIDO ESTIMADO USUARIO" description="Puede elegir entre las opciones siguientes del sistema..."/>
+      <MenuModular/>
     </>
   )
 }

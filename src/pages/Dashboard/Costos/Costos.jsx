@@ -14,7 +14,10 @@ const Costos = () => {
   },[])
 
   const columnasTabla = ['Documento','Proceso UNI','Proceso Cliente','Opciones']
-  const migajas = ['Costos'];
+  const migajas = [{
+    name:'Costos',
+    href:'/dashboard/costos'
+  }];
 
   const handleClickDetalles = (costoId)=>{
     navegate(`/dashboard/costos/${costoId}`);
