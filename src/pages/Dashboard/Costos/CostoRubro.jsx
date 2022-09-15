@@ -4,6 +4,7 @@ import BotonGDinamic from "../../../components/botonGrupal/BotonGDinamic"
 import CardHeaderTools from "../../../components/cards/CardHeaderTools"
 import CardPanel from "../../../components/cards/CardPanel"
 import FormInput from "../../../components/FormInput"
+import FormInputYesNo from "../../../components/FormInputYesNo"
 import GeneralError from "../../../components/GeneralError"
 import PlusSVG from "../../../components/iconsSVG/PlusSVG"
 import UlCustom from "../../../components/listas/UlCustom"
@@ -13,6 +14,7 @@ import { formValidate } from "../../../utils/formValidate"
 
 const CostoRubro = ({costoId}) => {
 
+    const [desglose,setDesglose] = useState(true)
     const [viewModalRubro,setViewModalRubro] = useState(false)
     const [titleModalRubro,setTitleModalRubro] = useState('NUEVO RUBRO')
     const {data,setData,error,loading,getDataByColumn,addData} = useFirestore('actividad');
@@ -72,7 +74,9 @@ const CostoRubro = ({costoId}) => {
     //     })
     //     setViewModalRubro(false);
     // }
-
+    const handleChangeYesNo = () =>{
+        setDesglose(!desglose)
+    }
 
     const handleClickOpenModal = (edit) =>{
         if(edit){
@@ -82,6 +86,7 @@ const CostoRubro = ({costoId}) => {
             setTitleModalRubro('NUEVA ACTIVIDAD')
         }
         setViewModalRubro(true);
+        setDesglose(true);
     }
 
   return (
@@ -148,47 +153,66 @@ const CostoRubro = ({costoId}) => {
                         required
                     })} 
                     />
-                <FormInput 
-                     label="Responsable *"
-                     type="text" 
-                     placeholder="Ingrese responsable"
-                     uppercase={false}
-                     {...register("responsable")}
+
+                <FormInputYesNo 
+                    opcion1="SI" 
+                    opcion2="NO"
+                    desglose={desglose}
+                    label="¿ La actividad tendrá un desglose en sub-actividades ?"
+                    {...register("actividadFinal",{
+                        onChange :handleChangeYesNo,
+                        required
+                    })}
                 />
-                <div className="grid grid-cols-4 gap-4">
-                    <div>
-                        <FormInput 
-                            label="Cantidad"
-                            type="number" 
-                            placeholder="" 
-                            {...register("cantidad")}
-                        />
-                    </div>
-                    <div >
-                        <FormInput 
-                            label="P.Unitario"
-                            type="number" 
-                            placeholder="" 
-                            {...register("pUnitario")}
-                        />
-                    </div>
-                    <div >
-                        <FormInput 
-                            label="P.Parcial"
-                            type="number" 
-                            placeholder="" 
-                            {...register("pParcial")}
-                        />
-                    </div>
-                    <div >
-                        <FormInput 
-                            label="P.Total"
-                            type="number" 
-                            placeholder="" 
-                            {...register("pTotal")}
-                        />
-                    </div>
-                </div>
+                {
+                    !desglose && (
+                        <>
+                             <FormInput 
+                                label="Responsable *"
+                                type="text" 
+                                placeholder="Ingrese responsable"
+                                error={errors.responsable}
+                                uppercase={false}
+                                {...register("responsable",{required})}
+                            />
+                            <div className="grid grid-cols-4 gap-4">
+                                <div>
+                                    <FormInput 
+                                        label="Cantidad *"
+                                        type="number" 
+                                        error={errors.cantidad}
+                                        {...register("cantidad",{required})}
+                                    />
+                                </div>
+                                <div >
+                                    <FormInput 
+                                        label="P.Unitario *"
+                                        type="number" 
+                                        error={errors.pUnitario}
+                                        {...register("pUnitario",{required})}
+                                    />
+                                </div>
+                                <div >
+                                    <FormInput 
+                                        label="P.Parcial *"
+                                        type="number" 
+                                        error={errors.pParcial}
+                                        {...register("pParcial",{required})}
+                                    />
+                                </div>
+                                <div >
+                                    <FormInput 
+                                        label="P.Total *"
+                                        type="number" 
+                                        error={errors.pTotal}
+                                        {...register("pTotal",{required})}
+                                    />
+                                </div>
+                            </div>
+                        </>
+                    )
+                }
+               
              </form>
         </ModalCustom>
     </>
