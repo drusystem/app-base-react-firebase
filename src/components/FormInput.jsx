@@ -4,6 +4,9 @@ import FormError from "./FormError";
 
 const FormInput = forwardRef(({type,placeholder,onChange, onBlur,name,label,error,uppercase=true},ref) => {
 
+    // Si queremos q se guarde mayuscula, a parte de mostrarlo en el input en mayuscula
+    // debemos agregar al objeto: variableString.toUpperCase()
+
     const classLabel = "block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300";
     const errorClassLabel = "block mb-2 text-sm font-medium text-red-700 dark:text-red-500";
     let errorClassInput = "bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block w-full p-2.5 dark:bg-red-100 dark:border-red-400";
