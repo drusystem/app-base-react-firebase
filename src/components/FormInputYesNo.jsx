@@ -1,7 +1,7 @@
 import { forwardRef } from "react"
 import FormError from "./FormError";
 
-const FormInputYesNo = forwardRef(({opcion1,opcion2,desglose,label,onChange,onClick, onBlur,name,error},ref) => {
+const FormInputYesNo = forwardRef(({opcion1,opcion2,desglose,label,onChange,onClick, onBlur,name,error,disabled},ref) => {
 
     const classLabel = "block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300";
     const errorClassLabel = "block mb-2 text-sm font-medium text-red-700 dark:text-red-500";
@@ -15,7 +15,7 @@ const FormInputYesNo = forwardRef(({opcion1,opcion2,desglose,label,onChange,onCl
         >
           {label}
         </label>
-        <ul  className="items-center w-full text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 sm:flex dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+        <ul className="items-center w-full text-sm font-medium text-gray-900 bg-white rounded-lg border border-gray-200 sm:flex dark:bg-gray-700 dark:border-gray-600 dark:text-white">
             <li className="w-full border-b border-gray-200 sm:border-b-0 sm:border-r dark:border-gray-600">
             <div className="flex items-center pl-3">
                 <input
@@ -28,6 +28,7 @@ const FormInputYesNo = forwardRef(({opcion1,opcion2,desglose,label,onChange,onCl
                 onBlur={onBlur}
                 checked={desglose}
                 onChange={onChange}
+                disabled={disabled} 
                 />
                 <label
                 htmlFor={`${name}_${opcion1}`}
@@ -49,6 +50,7 @@ const FormInputYesNo = forwardRef(({opcion1,opcion2,desglose,label,onChange,onCl
                 onBlur={onBlur}
                 checked={!desglose}
                 onChange={onChange}
+                disabled={disabled} 
                 />
                 <label
                 htmlFor={`${name}_${opcion2}`}

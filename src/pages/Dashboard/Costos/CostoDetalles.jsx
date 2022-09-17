@@ -39,11 +39,11 @@ const CostoDetalles = () => {
             <Loading/>
             :
             (
-              <div className="grid grid-cols-3 gap-4">
-                <div>
+              <div className="grid grid-cols-12 gap-4">
+                <div className="col-span-3">
                     <CostoCard item={item}/>
                 </div>
-                <div className="col-span-2">
+                <div className="col-span-9">
                       <CostoRubro costoId={costoId}/>
                 </div>
               </div>
