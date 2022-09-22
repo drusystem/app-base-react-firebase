@@ -1,7 +1,7 @@
-import { useEffect,useState } from "react";
+import { useState,useEffect } from "react";
 
-const BotonGDinamic = ({posicion,children,onClick,refIdTooltip}) => {
-
+const BotonGDinamicLoading = ({posicion}) => {
+  
     const [claseRedondeo,setClaseRedondeo] = useState('inline-flex items-center py-2 px-4 text-sm font-medium text-gray-900 bg-transparent rounded-lg border border-gray-900 hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700');
 
     useEffect(()=>{
@@ -19,10 +19,10 @@ const BotonGDinamic = ({posicion,children,onClick,refIdTooltip}) => {
     },[])
 
     return (
-        <button className={claseRedondeo} onClick={onClick} data-tooltip-target={refIdTooltip}>
-            {children}
+        <button className={claseRedondeo}>
+            Procesando
         </button>
     )
-  }
-  
-  export default BotonGDinamic
+}
+
+export default BotonGDinamicLoading

@@ -1,12 +1,18 @@
-import { addDoc, collection, documentId, getDocs, limit, query, where } from "firebase/firestore/lite"
+import { addDoc, collection, deleteDoc, doc, documentId, getDocs, limit, orderBy, query, setDoc, updateDoc, where, writeBatch } from "firebase/firestore/lite"
+import { nanoid } from "nanoid"
 import { useState } from "react"
 import { db, auth } from "../services/firebase"
 
 export const useFirestore = (coleccion) => {
     const [data,setData] = useState([])
+    const [initData,setInitData] = useState([])
     const [item,setItem] = useState({})
     const [error,setError] = useState('')
+    const [success,setSuccess] = useState('')
     const [loading,setLoading] = useState({})
+
+    const [lastData,setLastData] = useState([])
+    const [afterData,setAfterData] = useState([])
 
     const getData = async()=>{
         try {
@@ -17,7 +23,7 @@ export const useFirestore = (coleccion) => {
             }))
 
             setData(results)
-
+            setInitData(results)
         } catch (error) {
             setError(error.message)
         } finally{
@@ -25,15 +31,29 @@ export const useFirestore = (coleccion) => {
         }
     }
 
+    const searchData = (column,textFilter) =>{
+        const dataFiltrada = initData.filter((item)=>{
+            return (item[column].includes(textFilter.toString()) ||
+                    item[column].includes(textFilter.toString().toUpperCase()))
+        })
+        setData(dataFiltrada);
+    }
+
     const getDataByColumn = async(columna,value)=>{
         try {
+
             setLoading(prev=>({...prev,getDataByColumn:true}));
             const q = query(collection(db, coleccion), where(columna, "==",value));
             const querySnapshot = await getDocs(q);
             const results = querySnapshot.docs.map(doc =>({
                 id:doc.id,...doc.data()
             }))
+
+            results.sort((a, b) => a.uid.localeCompare(b.uid));
+
             setData(results)
+            setLastData(results)
+            console.log(results)
         } catch (error) {
             setError(error.message)
         } finally{
@@ -41,9 +61,8 @@ export const useFirestore = (coleccion) => {
         }
     }
 
-
-
     const getItemById = async ( id ) => { 
+
         try {
             setLoading(prev=>({...prev,getItemById:true}));
             let result = {}
@@ -74,20 +93,120 @@ export const useFirestore = (coleccion) => {
             setLoading(prev=>({...prev,addData:true}));
             const newDoc = {
                 ...objeto,
-                uid: auth.currentUser.uid,
+                uid: nanoid(6),
                 created:new Date(),
                 userCreated:auth.currentUser.uid,
                 updated:new Date(),
-                userUpdated: auth.currentUser.uid
+                userUpdated: auth.currentUser.uid,
+                enabled:true
             }
-            await addDoc(collection(db, coleccion),newDoc);
+
+            const docRef = doc(db,coleccion,newDoc.uid)
+            await setDoc(docRef,newDoc);
 
             setData([...data,newDoc]);
+            setInitData([...initData,newDoc]);
+            setSuccess('success');
             
         } catch (error) {
             setError(error.message)
+            setSuccess('');
         } finally{
             setLoading(prev=>({...prev,addData:false}));
+        }
+    }
+
+    const saveLoteDataActividades = async(objetos,costoId) =>{
+        try {
+            setLoading(prev=>({...prev,saveLoteData:true}));
+
+            const batch = writeBatch(db)
+
+            lastData.forEach(dataAntigua =>{
+                const lastRef = doc(db,coleccion,dataAntigua.uid);
+                batch.delete(lastRef)
+            });
+            
+            objetos.forEach((objeto,index) =>{
+                const objetoConAuditoria = {
+                    ...objeto,
+                    created:new Date(),
+                    userCreated:auth.currentUser.uid,
+                    updated:new Date(),
+                    userUpdated: auth.currentUser.uid,
+                    uid: (index +'_'+nanoid(6))
+                }
+                setAfterData([...afterData,objetoConAuditoria])
+                const refColeccion = doc(db,coleccion,objetoConAuditoria.uid);
+                batch.set(refColeccion,objetoConAuditoria)
+            });
+            
+            await batch.commit();
+
+            setLastData(afterData);
+          
+        } catch (error) {
+            setError(error.message)
+        } finally{
+            setLoading(prev=>({...prev,saveLoteData:false}));
+        }
+    }
+
+    const deleteData = async(uid)=>{
+        try {
+            setLoading(prev=>({...prev,[uid]:true}));
+            const docRef = doc(db,coleccion,uid)
+            await deleteDoc(docRef)
+
+            //regresamos la data guardada sin el filtro
+            setData([...initData])
+            //listamos todos los datos excepto el eliminado
+            setData(data.filter(item=> item.uid !=uid))
+            //asignamos como data inicial la nueva lista (para trabajar con el filtro)
+            setInitData([...data]);
+
+            setSuccess('deleted');
+        } catch (error) {
+            setError(error.message)
+            setSuccess('');
+        } finally{
+            setLoading(prev=>({...prev,[uid]:false}));
+        }
+    }
+
+    const updateData = async(uid,objeto)=>{
+        try {
+
+            setLoading(prev=>({...prev,updateData:true}));
+            const docRef = doc(db,coleccion,uid)
+            const updateObjeto = {
+                ...objeto,
+                updated:new Date(),
+                userUpdated: auth.currentUser.uid
+            }
+            await updateDoc(docRef,updateObjeto)
+
+            // regresamos a la data sin filtros
+            setData([...initData])
+
+            // actualizamos el registro que estamos editando
+            const objetoEnActualizacion = data.find(item=> item.uid ===uid)
+            const listaActualida = data.filter(item=> item.uid !=uid)
+            const objetoActualizado = {
+                ...objetoEnActualizacion,
+                ...updateObjeto
+            }
+
+            setData([objetoActualizado,...listaActualida])
+            // asignamos la nueva lista como data inicial para ser usada en filtros
+            setInitData([...data])
+
+            setSuccess('updated');
+        } catch (error) {
+            setError(error.message)
+            setSuccess('');
+        } finally{
+            setLoading(prev=>({...prev,updateData:false}));
         }
     }
 
@@ -101,6 +220,11 @@ export const useFirestore = (coleccion) => {
         getItemById,
         addData,
         getDataByColumn,
-        setData
+        setData,
+        saveLoteDataActividades,
+        success,
+        searchData,
+        deleteData,
+        updateData
   }
 }

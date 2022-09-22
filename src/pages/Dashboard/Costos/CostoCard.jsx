@@ -9,8 +9,17 @@ const CostoCard = ({item}) => {
 
     useEffect(()=>{
         if(fecha_presupuesto){
-            let fechaSeteada = fecha_presupuesto.toDate().toLocaleDateString('es-ES');
+            let fechaSeteada;
+            if(fecha_presupuesto.toString().length == 10){
+                const fechaFormateada = fecha_presupuesto.split("-").reverse().join('/');
+                fechaSeteada = fechaFormateada       
+
+            }else{
+                fechaSeteada = fecha_presupuesto.toDate().toLocaleDateString('es-ES');
+                
+            }
             setFecha(fechaSeteada)
+            
         }else{
             setFecha('Hubo problemas al obtener la fecha')
         }

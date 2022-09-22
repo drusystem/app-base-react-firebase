@@ -56,7 +56,10 @@ const mensajesError = [
     {code:'auth/session-cookie-revoked',description:'Se revocaron las cookies de la sesión de Firebase.'},
     {code:'auth/uid-already-exists',description:'Otro usuario ya utiliza el uid proporcionado. Cada usuario debe tener un uid único.'},
     {code:'auth/unauthorized-continue-uri',description:'El dominio de la URL de continuación no está en la lista blanca. Inclúyelo en la lista en Firebase console.'},
-    {code:'auth/user-not-found',description:'No existe ningún registro de usuario que corresponda al identificador proporcionado.'}
+    {code:'auth/user-not-found',description:'No existe ningún registro de usuario que corresponda al identificador proporcionado.'},
+    {code: 'success',description:'Información registrada satisfactoriamente'},
+    {code: 'updated',description:'Información actualizada satisfactoriamente'},
+    {code:'deleted',description:'Información eliminada correctamente'}
 
 ]
 

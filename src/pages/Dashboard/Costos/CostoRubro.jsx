@@ -6,9 +6,10 @@ import CardPanel from "../../../components/cards/CardPanel"
 import FormInput from "../../../components/FormInput"
 import FormInputYesNo from "../../../components/FormInputYesNo"
 import GeneralError from "../../../components/GeneralError"
+import GeneralMessage from "../../../components/GeneralMessage"
 import DeleteSVG from "../../../components/iconsSVG/DeleteSVG"
-import EditSVG from "../../../components/iconsSVG/EditSVG"
 import PlusSVG from "../../../components/iconsSVG/PlusSVG"
+import Loading from "../../../components/layouts/Loading"
 import UlCustom from "../../../components/listas/UlCustom"
 import ModalCustom from "../../../components/modal/ModalCustom"
 import { useFirestore } from "../../../hooks/useFirestore"
@@ -16,6 +17,7 @@ import { formValidate } from "../../../utils/formValidate"
 
 const CostoRubro = ({costoId}) => {
 
+    const [sucess,setSucces] = useState('')
     const [desglose,setDesglose] = useState(true)
     const [disabledDesglose,setDisabledDesglose] = useState(false);
     const [nivel,setNivel] = useState({
@@ -37,7 +39,7 @@ const CostoRubro = ({costoId}) => {
 
     const [viewModalRubro,setViewModalRubro] = useState(false)
     const [titleModalRubro,setTitleModalRubro] = useState('NUEVO RUBRO')
-    const {data,setData,error,loading,getDataByColumn,addData} = useFirestore('actividad');
+    const {data,setData,error,loading,getDataByColumn,saveLoteDataActividades} = useFirestore('actividad');
     const {register,handleSubmit, formState:{errors},reset} = useForm({
         defaultValues:{
             actividad:'',
@@ -56,6 +58,7 @@ const CostoRubro = ({costoId}) => {
     const onSubmit = ({actividad,responsable,cantidad,pUnitario,pParcial,pTotal}) =>{
         // actividad:actividad.toUpperCase(),
         const nuevaActividad = {
+            costoId,
             actividad,
             responsable,
             cantidad,
@@ -130,7 +133,6 @@ const CostoRubro = ({costoId}) => {
     }
 
     const handleClickDeleteActividad = (nivel_Actividad,indice,indice2 = null,indice3= null,indice4=null) =>{
-        debugger;
         if(nivel_Actividad == 0){
             
             let listaActividades = data.filter((actividad,index) => index != indice)
@@ -219,6 +221,11 @@ const CostoRubro = ({costoId}) => {
         setData(nuevoArray);
     }
 
+    const handleClickSaveAll = async() =>{
+        await saveLoteDataActividades(data,costoId)
+        setSucces('campos registrados')
+    }
+
     // const onSubmit = async({actividad,responsable,cantidad,pUnitario,pParcial,pTotal}) => {
         
     //     await addData({
@@ -256,6 +263,9 @@ const CostoRubro = ({costoId}) => {
 
   return (
     <>
+        {
+            loading.saveLoteData && <Loading/>
+        }
         <CardPanel>
             <CardHeaderTools title="ACTIVIDADES REGISTRADAS">
                 <BotonGDinamic onClick={()=>handleClickAddActividad(false,0,null)}>
@@ -263,6 +273,9 @@ const CostoRubro = ({costoId}) => {
                 </BotonGDinamic>
             </CardHeaderTools>
             <GeneralError code={error}/>
+            {
+                (sucess.length > 0 && error.length ===0) && (<GeneralMessage code='success' type='Éxito !' color='green' />)
+            }
             <div className="grid grid-cols-12 gap-0 text-center text-sm py-4">
                 <div className="col-span-5">
                     ACTIVIDAD
@@ -529,6 +542,14 @@ const CostoRubro = ({costoId}) => {
                     )
                 }
             </UlCustom>
+            <button
+            onClick={handleClickSaveAll}
+            type="button"
+            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+            >
+            Guardar cambios
+            </button>
+
         </CardPanel>
 
         <ModalCustom 
