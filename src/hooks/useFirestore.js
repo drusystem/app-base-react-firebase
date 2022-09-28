@@ -159,6 +159,7 @@ export const useFirestore = (coleccion) => {
 
     const deleteData = async(uid)=>{
         try {
+            
             setLoading(prev=>({...prev,[uid]:true}));
             const docRef = doc(db,coleccion,uid)
             await deleteDoc(docRef)
