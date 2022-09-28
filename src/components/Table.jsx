@@ -1,5 +1,4 @@
-
-const Table = ({columnas,loading,children}) => {
+const Table = ({columnas,loading,children,numRegistros}) => {
 
   return (    
         <div className="overflow-x-auto relative shadow-md sm:rounded-lg">
@@ -16,7 +15,7 @@ const Table = ({columnas,loading,children}) => {
                     </tr>
                 </thead>
                 <tbody>
-                                {
+                        {
                             loading ?
                             (
                                 <tr key="loading_info" className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
@@ -26,8 +25,20 @@ const Table = ({columnas,loading,children}) => {
                                 </tr>
                             ):(<>
                             {children}
+                            {
+                                numRegistros == 0 && 
+                                (
+                                    <tr key="loading_info" className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                        <th scope="row" colSpan={columnas.length} className="text-center py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            No cuenta con registros actualmente
+                                        </th>
+                                    </tr>  
+                                )
+                            }
                             </>)
                         }
+
+
                 </tbody>
             </table>
         </div>

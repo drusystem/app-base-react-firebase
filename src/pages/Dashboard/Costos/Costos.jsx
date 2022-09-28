@@ -122,7 +122,7 @@ const Costos = () => {
       
       <GeneralError code={error}/>
       <GeneralMessage code={success} type="Éxito !" color='green'/>
-      <Table  loading={loading.getData} columnas={columnasTabla}>
+      <Table  loading={loading.getData} columnas={columnasTabla} numRegistros={data.length}>
           {
             data.map(registro=>(
                 <tr key={`tr_register_${registro.id}`} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">

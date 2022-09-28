@@ -53,7 +53,6 @@ export const useFirestore = (coleccion) => {
 
             setData(results)
             setLastData(results)
-            console.log(results)
         } catch (error) {
             setError(error.message)
         } finally{
@@ -118,7 +117,9 @@ export const useFirestore = (coleccion) => {
 
     const saveLoteDataActividades = async(objetos,costoId) =>{
         try {
+
             setLoading(prev=>({...prev,saveLoteData:true}));
+            let nuevaLista = [];
 
             const batch = writeBatch(db)
 
@@ -136,17 +137,21 @@ export const useFirestore = (coleccion) => {
                     userUpdated: auth.currentUser.uid,
                     uid: (index +'_'+nanoid(6))
                 }
-                setAfterData([...afterData,objetoConAuditoria])
+                nuevaLista.push(objetoConAuditoria);
+                
                 const refColeccion = doc(db,coleccion,objetoConAuditoria.uid);
                 batch.set(refColeccion,objetoConAuditoria)
             });
             
             await batch.commit();
 
-            setLastData(afterData);
+            setSuccess('success');
+
+            setLastData(nuevaLista);
           
         } catch (error) {
             setError(error.message)
+            setSuccess('')
         } finally{
             setLoading(prev=>({...prev,saveLoteData:false}));
         }
@@ -189,15 +194,21 @@ export const useFirestore = (coleccion) => {
             // regresamos a la data sin filtros
             setData([...initData])
 
-            // actualizamos el registro que estamos editando
-            const objetoEnActualizacion = data.find(item=> item.uid ===uid)
-            const listaActualida = data.filter(item=> item.uid !=uid)
-            const objetoActualizado = {
-                ...objetoEnActualizacion,
-                ...updateObjeto
-            }
+            setData(initData.map((item)=>
+                item.uid === uid 
+                    ? {...item,...updateObjeto}
+                    : item
+            ));
 
-            setData([objetoActualizado,...listaActualida])
+            // actualizamos el registro que estamos editando
+            // const objetoEnActualizacion = data.find(item=> item.uid ===uid)
+            // const listaActualida = data.filter(item=> item.uid !=uid)
+            // const objetoActualizado = {
+            //     ...objetoEnActualizacion,
+            //     ...updateObjeto
+            // }
+
+            // setData([objetoActualizado,...listaActualida])
             // asignamos la nueva lista como data inicial para ser usada en filtros
             setInitData([...data])
 
