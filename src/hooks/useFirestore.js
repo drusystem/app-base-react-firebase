@@ -201,16 +201,6 @@ export const useFirestore = (coleccion) => {
                     : item
             ));
 
-            // actualizamos el registro que estamos editando
-            // const objetoEnActualizacion = data.find(item=> item.uid ===uid)
-            // const listaActualida = data.filter(item=> item.uid !=uid)
-            // const objetoActualizado = {
-            //     ...objetoEnActualizacion,
-            //     ...updateObjeto
-            // }
-
-            // setData([objetoActualizado,...listaActualida])
-            // asignamos la nueva lista como data inicial para ser usada en filtros
             setInitData([...data])
 
             setSuccess('updated');

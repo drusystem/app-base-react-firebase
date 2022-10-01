@@ -1,9 +1,15 @@
 import { NavLink } from "react-router-dom"
 import CardPanel from "../../components/cards/CardPanel"
+import ConfigSVG from "../../components/iconsSVG/ConfigSVG";
 import CostosSVG from "../../components/iconsSVG/CostosSVG"
 import { groupClassTailwind } from "../../utils/groupClassTailwind";
 
 const Modulos = [
+    {
+        name:'CONFIGURACIONES',
+        icon:<ConfigSVG size={12}/>,
+        href:'/config/parameters'
+    },
     {
         name:'COSTOS',
         icon: <CostosSVG size={12}/>,
