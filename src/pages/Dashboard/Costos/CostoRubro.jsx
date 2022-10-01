@@ -800,7 +800,7 @@ const CostoRubro = ({costoId}) => {
                 </tr>
                 <tr key="footer" className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                     <th key="footer_0_1" scope="row" className="py-4 px-6 text-base text-right">
-                        Incluido IGV ({ (item.value *100) } %)
+                        Incluido IGV ({ (item.value *100) }%)
                     </th>
                     <td key="footer_1_1" className="py-4 px-6 text-right">
                         --
