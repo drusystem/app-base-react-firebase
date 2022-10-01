@@ -48,6 +48,13 @@ const CostoRubro = ({costoId}) => {
     const [viewModalRubro,setViewModalRubro] = useState(false)
     const [titleModalRubro,setTitleModalRubro] = useState('NUEVO RUBRO')
     const {data,setData,error,loading,getDataByColumn,saveLoteDataActividades,success} = useFirestore('actividad');
+
+    const {getItemByColumn,item} = useFirestore("parametros")
+
+    useEffect(()=>{
+        getItemByColumn('name','IGV');
+    },[])
+
     const {register,handleSubmit, formState:{errors},reset} = useForm({
         defaultValues:{
             actividad:'',
@@ -779,8 +786,8 @@ const CostoRubro = ({costoId}) => {
                     ))
                 }
                 <tr key="footer" className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <th key="footer_0" scope="row" className="py-4 px-6 text-base">
-                        TOTAL
+                    <th key="footer_0" scope="row" className="py-4 px-6 text-base text-right">
+                        TOTAL EN SOLES ({'S/'})
                     </th>
                     <td key="footer_1" className="py-4 px-6 text-right">
                         100 %
@@ -791,6 +798,23 @@ const CostoRubro = ({costoId}) => {
                         }
                     </td>
                 </tr>
+                <tr key="footer" className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    <th key="footer_0_1" scope="row" className="py-4 px-6 text-base text-right">
+                        Incluido IGV ({ (item.value *100) } %)
+                    </th>
+                    <td key="footer_1_1" className="py-4 px-6 text-right">
+                        --
+                    </td>
+                    <th key="footer_2_1" scope="row" className="py-4 px-6 text-right text-base">
+                        {
+                            (
+                                data.map(item=>item.pParcial).reduce((prev,curr)=>(prev+curr),0) +
+                                (data.map(item=>item.pParcial).reduce((prev,curr)=>(prev+curr),0)*item.value)
+                            )
+                        }
+                    </th>
+                </tr>
+                
             </Table>
         </ModalCustom>
     </>

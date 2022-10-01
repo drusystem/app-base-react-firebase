@@ -60,7 +60,7 @@ const ListParameters = () => {
   return (
     <>
         <div className="grid grid-cols-12 gap-2 content-center">
-            <div className="col-span-7">
+            <div className="col-span-12">
                 <Breadcrumb migajas={migajas}/>
             </div>
         </div>
@@ -109,10 +109,11 @@ const ListParameters = () => {
                   {...register("uid")}   
                 />
                 <FormInput
-                     label="Nombre *"
+                     label="Parámetro (no editable)"
                      type="text"
                      uppercase={true}
                      placeholder="Ingrese nombre del parámetro"
+                     disabled={true}
                      error={errors.name}
                      {...register("name",{
                       required

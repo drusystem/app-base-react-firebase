@@ -2,7 +2,7 @@ import { forwardRef } from "react"
 import FormError from "./FormError";
 
 
-const FormInput = forwardRef(({type,placeholder,onChange, onBlur,name,label,error,uppercase=true},ref) => {
+const FormInput = forwardRef(({type,placeholder,onChange, onBlur,name,label,error,uppercase=true,disabled=false},ref) => {
     // Si queremos q se guarde mayuscula, a parte de mostrarlo en el input en mayuscula
     // debemos agregar al objeto: variableString.toUpperCase()
 
@@ -30,6 +30,7 @@ const FormInput = forwardRef(({type,placeholder,onChange, onBlur,name,label,erro
             onChange={onChange} 
             onBlur={onBlur} 
             name={name}
+            disabled={disabled}
         />
         <FormError error={error}/>
     </div>

@@ -60,6 +60,32 @@ export const useFirestore = (coleccion) => {
         }
     }
 
+    const getItemByColumn = async(columna,value)=>{
+        try {
+
+            setLoading(prev=>({...prev,getItemByColumn:true}));
+            let result = {}
+            const q = query(collection(db, coleccion), where(columna, "==",value));
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach((doc) => {  
+                result ={id:doc.id,...doc.data()}
+            }); 
+
+            setItem(result)
+
+            if(JSON.stringify(result) === '{}'){
+                setError('recorder-not-found');
+            }else{
+                setError('');
+            }
+
+        } catch (error) {
+            setError(error.message)
+        }finally{
+            setLoading(prev=>({...prev,getItemByColumn:false}));
+        }
+    }
+
     const getItemById = async ( id ) => { 
 
         try {
@@ -227,6 +253,7 @@ export const useFirestore = (coleccion) => {
         success,
         searchData,
         deleteData,
-        updateData
+        updateData,
+        getItemByColumn
   }
 }
