@@ -40,7 +40,6 @@ const App = ()=> {
               <Route path="dashboard/costos/:costoId" element={<CostoDetalles/>}/>
               <Route path="config/parameters" element={<ListParameters/>}/>
           </Route>
-
           <Route path="*" element={<NotFound/>}/>
           
           {/* <Route path="/" element={<Layout/>}>

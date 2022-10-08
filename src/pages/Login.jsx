@@ -6,10 +6,11 @@ import { formValidate } from "../utils/formValidate";
 import FormInputJT from "../components/jt-ui/FormInputJT";
 import FormErrorJT from "../components/jt-ui/FormErrorJT";
 import GeneralErrorJT from "../components/jt-ui/GeneralErrorJT";
+import BotonLoading from "../components/layouts/BotonLoading";
 
 
 const Login = () => {
-
+    const [loading,setLoading] = useState(false);
     const {loginUser}  = useContext(UserContext);
     const navegate = useNavigate();
     const {register,handleSubmit, formState:{errors}, setError} = useForm();
@@ -18,10 +19,13 @@ const Login = () => {
 
     const onSubmit = async({email,password}) => {
         try {
+            setLoading(true);
             await loginUser(email,password);
             navegate("/dashboard");
         } catch (error) {
             setErrorSystem(error.code);
+        } finally{
+            setLoading(false);
         }
     }
 
@@ -80,12 +84,21 @@ const Login = () => {
                             </a>
                         </div> */}
                         <div className="mt-4 order-1 md:order-2">
-                            <button
-                            type="submit"
-                            className="w-full bg-indigo-700 p-2 rounded-full hover:bg-indigo-800 transition-colors"
-                            >
-                            Iniciar sesión
-                            </button>
+                            {
+                                loading?
+                                <BotonLoading proceso="Ingresando"
+                                    clase="w-full bg-indigo-700 p-2 rounded-full hover:bg-indigo-800 transition-colors"
+                                />
+                                :
+                                    <button
+                                    type="submit"
+                                    className="w-full bg-indigo-700 p-2 rounded-full hover:bg-indigo-800 transition-colors"
+                                    >
+                                    Iniciar sesión
+                                    </button>
+                                
+                            }
+                           
                         </div>
                     </form>
                 </div>

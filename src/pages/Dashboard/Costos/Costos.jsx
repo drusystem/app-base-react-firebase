@@ -13,7 +13,7 @@ import { formValidate } from "../../../utils/formValidate"
 import GeneralMessage from "../../../components/GeneralMessage"
 import AutoSearch from "../../../components/AutoSearch"
 import BotonGDinamicLoading from "../../../components/botonGrupal/BotonGDinamicLoading"
-
+import CostoPDF from "./CostoPDF"
 
 const Costos = () => {
   const [search,setSearch] = useState('')
@@ -23,11 +23,15 @@ const Costos = () => {
   })
   
   const {data,error,loading,getData,addData,success,searchData,deleteData,updateData} = useFirestore('costos')
+  const {getDataByColumnReturn:ListarActividades} = useFirestore("actividad")
+
+  const {getItemByColumn,item : igv} = useFirestore("parametros")
   
   const navegate = useNavigate();
 
   useEffect(()=>{
-    getData()
+    getData();
+    getItemByColumn('name','IGV');
   },[])
 
   useEffect(()=>{
@@ -102,6 +106,13 @@ const Costos = () => {
     setValue("postulantes",postulantes);
     setValue("fecha_presupuesto",fecha_presupuesto);
     setModalEstructura(prev=>({title:'Editar Costo',show:true}))
+  }
+
+  const handleClickDocument = async(costo) =>{
+
+     const actividades = await ListarActividades('costoId',costo.uid)
+     await CostoPDF(costo,actividades, igv.value)
+         
   }
 
   return (
@@ -184,6 +195,14 @@ const Costos = () => {
                             />
                           </svg>
                           Detalles
+                        </button>
+                        <button
+                          onClick={()=>handleClickDocument(registro)}
+                          type="button"
+                          className="inline-flex items-center py-2 px-4 text-sm font-medium text-gray-900 bg-transparent border-l border-t border-b border-gray-900 hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white dark:border-white dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700"
+                        >
+                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
+                          Documento
                         </button>
                         {
                           loading[registro.uid] ?

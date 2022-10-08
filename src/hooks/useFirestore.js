@@ -60,6 +60,48 @@ export const useFirestore = (coleccion) => {
         }
     }
 
+
+    const getDataByColumnReturn = async(columna,value)=>{
+        try {
+
+            setLoading(prev=>({...prev,getDataByColumnReturn:true}));
+            const q = query(collection(db, coleccion), where(columna, "==",value));
+            const querySnapshot = await getDocs(q);
+            const results = querySnapshot.docs.map(doc =>({
+                id:doc.id,...doc.data()
+            }))
+
+            results.sort((a, b) => a.uid.localeCompare(b.uid));
+
+            return results;
+            
+        } catch (error) {
+            setError(error.message)
+        } finally{
+            setLoading(prev=>({...prev,getDataByColumnReturn:false}));
+        }
+    }
+
+    const getItemByColumnReturn = async(columna,value)=>{
+        try {
+
+            setLoading(prev=>({...prev,getItemByColumn:true}));
+            let result = {}
+            const q = query(collection(db, coleccion), where(columna, "==",value));
+            const querySnapshot = await getDocs(q);
+            querySnapshot.forEach((doc) => {  
+                result ={id:doc.id,...doc.data()}
+            }); 
+
+            return result
+
+        } catch (error) {
+            setError(error.message)
+        }finally{
+            setLoading(prev=>({...prev,getItemByColumn:false}));
+        }
+    }
+
     const getItemByColumn = async(columna,value)=>{
         try {
 
@@ -254,6 +296,8 @@ export const useFirestore = (coleccion) => {
         searchData,
         deleteData,
         updateData,
-        getItemByColumn
+        getItemByColumn,
+        getDataByColumnReturn,
+        getItemByColumnReturn
   }
 }
